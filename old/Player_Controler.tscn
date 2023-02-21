@@ -1,0 +1,27 @@
+[gd_scene load_steps=6 format=2]
+
+[ext_resource path="res://old/PlayerSkin.tscn" type="PackedScene" id=1]
+[ext_resource path="res://old/scripts/Player_Controler.gd" type="Script" id=2]
+[ext_resource path="res://old/Boxes/Hurtbox.tscn" type="PackedScene" id=3]
+[ext_resource path="res://old/PlayerSkin.gd" type="Script" id=4]
+
+[sub_resource type="CapsuleShape2D" id=1]
+radius = 9.6
+height = 10.4
+
+[node name="Player_Controler_0" type="KinematicBody2D"]
+collision_layer = 0
+script = ExtResource( 2 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2( 0, -14 )
+shape = SubResource( 1 )
+
+[node name="PlayerSkin" parent="." instance=ExtResource( 1 )]
+script = ExtResource( 4 )
+
+[node name="Hurtbox" parent="." instance=ExtResource( 3 )]
+collision_layer = 4
+collision_mask = 2
+
+[editable path="Hurtbox"]
