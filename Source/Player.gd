@@ -10,6 +10,8 @@ export var gravity: = 400.0
 export var maximum_jumps: = 2
 export var jump_strength: = 200.0
 export var double_jump_strenght: = 200.0
+export var fast_fall_strength: = 50.0
+export var max_fast_fall_speed: = 100.0
 var _velocity: = Vector2.ZERO
 var _jumps_made: = 0
 # Attack
@@ -36,8 +38,9 @@ func _physics_process(delta: float) -> void:
 	_velocity.x = _horizontal_direction * speed
 	_velocity.y += gravity * delta
 	
-	# Movement type
+	# Movement
 	var _is_falling: = _velocity.y > 0.0 and not is_on_floor()
+	var _is_fast_falling: = Input.is_action_pressed("move_down_%s" %id)
 	var _is_jumping: = Input.is_action_just_pressed("jump_%s" % id) and is_on_floor()
 	var _is_double_jumping: = Input.is_action_just_pressed("jump_%s" % id) and not is_on_floor()
 	var _is_jump_cancelled: = Input.is_action_just_released("jump_%s" % id) and _velocity.y < 0.0
@@ -45,7 +48,13 @@ func _physics_process(delta: float) -> void:
 	var _is_running: = is_on_floor() and not is_zero_approx(_velocity.x)
 	var _is_knockback: = !(is_zero_approx(_knockback.x) and is_zero_approx(_knockback.y))
 	
-	if _is_knockback:
+	if _is_dodging and is_zero_approx(_horizontal_direction):
+		if _is_fast_falling:
+			_velocity.x = 0
+			_velocity.y += fast_fall_strength
+		else:
+			_velocity = Vector2.ZERO
+	elif _is_knockback:
 		_velocity += _knockback
 		_knockback = lerp(_knockback, Vector2.ZERO, knockback_decrease)
 	elif _is_jumping:
@@ -57,11 +66,14 @@ func _physics_process(delta: float) -> void:
 			_velocity.y = -double_jump_strenght
 	elif _is_jump_cancelled:
 		_velocity.y = 0.0
+	elif _is_fast_falling:
+		_velocity.y += fast_fall_strength
 	elif _is_idling or _is_running:
 		_jumps_made = 0
 	
 	_velocity = move_and_slide(_velocity, UP_DIRECTION)
 	
+	# Animations
 	if not is_zero_approx(_velocity.x):
 		_pivot.scale.x = sign(_velocity.x) * _start_scale.x
 
@@ -74,7 +86,7 @@ func _physics_process(delta: float) -> void:
 	elif _is_idling and _is_free:
 		_animation.play("idle")
 	
-	# Attack type
+	# Attacks
 	var _neutral_light: = Input.is_action_just_pressed("light_attack_%s" %id) and is_on_floor()
 	var _down_light: = Input.is_action_just_pressed("light_attack_%s" %id) and Input.is_action_pressed("move_down_%s" %id) and is_on_floor()
 	var _side_light: = Input.is_action_just_pressed("light_attack_%s" % id) and is_on_floor() and not is_zero_approx(_velocity.x)
@@ -105,7 +117,7 @@ func _physics_process(delta: float) -> void:
 
 	if _dodge:
 		_is_dodging = true
-		_animation.current_animation = "hit"
+		_animation.current_animation = "dodge"
 		yield(_animation, "animation_finished")
 		_is_dodging = false
 
