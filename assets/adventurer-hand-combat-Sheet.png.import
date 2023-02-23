@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/adventurer-hand-combat-Sheet.png-2bdde067ba78bdca23242176573be426.stex"
+path="res://.import/adventurer-hand-combat-Sheet.png-9a5162dd4eb364ab86321a9fd4178cdf.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/adventurer-hand-combat-Sheet.png"
-dest_files=[ "res://.import/adventurer-hand-combat-Sheet.png-2bdde067ba78bdca23242176573be426.stex" ]
+source_file="res://Assets/adventurer-hand-combat-Sheet.png"
+dest_files=[ "res://.import/adventurer-hand-combat-Sheet.png-9a5162dd4eb364ab86321a9fd4178cdf.stex" ]
 
 [params]
 
@@ -20,7 +20,7 @@ compress/hdr_mode=0
 compress/bptc_ldr=0
 compress/normal_map=0
 flags/repeat=0
-flags/filter=true
+flags/filter=false
 flags/mipmaps=false
 flags/anisotropic=false
 flags/srgb=2
